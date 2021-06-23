@@ -58,9 +58,14 @@ public class SprayAndLocateDecisionRouter implements RoutingDecisionEngine {
         thisGeo.setDir(0);
         thisGeo.setSpeed(0);
         thisGeo.setTime(SimClock.getTime());
+        dictionary.replace(thisHost, thisGeo);
         System.out.println(thisGeo.toString());
-//        System.out.println(thisGeo.toString());
-       for (Map.Entry<DTNHost, GeoInfo> entry : thisHost) {
+        SprayAndLocateDecisionRouter de = this.getOtherDecisionEngine(peer);
+
+       for (Map.Entry<DTNHost, GeoInfo> entry : dictionary.entrySet()) {
+           if (entry.getKey() == thisHost) {
+               
+           }
        
        }
 //            if (this.Dictionary.get(i).getId() == thisHost) {
@@ -86,6 +91,11 @@ public class SprayAndLocateDecisionRouter implements RoutingDecisionEngine {
 //        }
 //        System.out.println("HALO");
 //        this.Dictionary.add(new GeoInfo(thisHost.getAddress(), thisHost.getLocation(), thisHost.getPath().getCoords(), thisHost.getPath().getSpeed(), SimClock.getTime()));
+    }
+    private SprayAndLocateDecisionRouter getOtherDecisionEngine(DTNHost h){
+        MessageRouter otherHost = h.getRouter();
+        assert otherHost instanceof DecisionEngineRouter : "this router only work with other routers of same type";
+        return (SprayAndLocateDecisionRouter) (((DecisionEngineRouter)otherHost).getDecisionEngine());
     }
 
     @Override
@@ -170,9 +180,5 @@ public class SprayAndLocateDecisionRouter implements RoutingDecisionEngine {
         return new SprayAndLocateDecisionRouter(this);
     }
 
-    private SprayAndLocateDecisionRouter getOtherDecisionEngine(DTNHost h) {
-        MessageRouter otherRouter = h.getRouter();
-        assert otherRouter instanceof DecisionEngineRouter : "This router only works " + " with other routers of same type";
-        return (SprayAndLocateDecisionRouter) ((DecisionEngineRouter) otherRouter).getDecisionEngine();
-    }
+   
 }
